@@ -6,6 +6,8 @@ import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 
+
+
 async function getData() {
   const querry = `*[_type == 'blog'] | order(_createdAt desc){ 
   title,
