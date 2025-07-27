@@ -4,7 +4,7 @@ import { fullBlog } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
 import Image from "next/image";
 
-export const revalidate = 30;
+export const revalidate = 30; // ISR every 30s
 
 async function getData(slug: string) {
   const query = `
@@ -52,4 +52,14 @@ export default async function BlogArticle({ params }: PageProps) {
       </div>
     </div>
   );
+}
+
+// ✅ REQUIRED FOR DYNAMIC ROUTES
+export async function generateStaticParams() {
+  const query = `*[_type == "blog"]{ "slug": slug.current }`;
+  const slugs = await client.fetch(query);
+
+  return slugs.map((slug: { slug: string }) => ({
+    slug: slug.slug,
+  }));
 }
