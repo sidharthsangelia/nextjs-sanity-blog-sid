@@ -1,31 +1,30 @@
- 
+import { PortableText } from "@portabletext/react";
 import { portableTextComponents } from "@/components/PortableTextComponent";
 import { fullBlog } from "@/lib/interface";
 import { client, urlFor } from "@/lib/sanity";
-import { PortableText } from "@portabletext/react";
 import Image from "next/image";
- 
 
-export const revalidate = 30; // revalidate at most 30 seconds
+export const revalidate = 30;
 
 async function getData(slug: string) {
   const query = `
     *[_type == "blog" && slug.current == '${slug}'] {
-        "currentSlug": slug.current,
-          title,
-          content,
-          thumbnail
-      }[0]`;
-
+      "currentSlug": slug.current,
+      title,
+      content,
+      thumbnail
+    }[0]`;
   const data = await client.fetch(query);
   return data;
 }
 
-export default async function BlogArticle({
-  params,
-}: {
-  params: { slug: string };
-}) {
+type PageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+export default async function BlogArticle({ params }: PageProps) {
   const data: fullBlog = await getData(params.slug);
 
   return (
